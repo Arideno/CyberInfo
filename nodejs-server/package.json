@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/App.js --exec \"babel-node\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.1",
+    "@babel/node": "^7.10.1",
+    "@babel/preset-env": "^7.10.1",
+    "@babel/register": "^7.10.1"
+  }
+}
