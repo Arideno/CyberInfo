@@ -13,6 +13,18 @@ class Team:
         return f"Id: {self.id}, name: {self.name}, wins: {self.wins}, losses: {self.losses}"
 
 
+class Match:
+    def __init__(self, name, radiant, dire, duration, winner):
+        self.name = name
+        self.radiant = radiant
+        self.dire = dire
+        self.duration = duration
+        self.winner = winner
+
+    def __repr__(self):
+        return f"Name: {self.name}, radiant: {self.radiant}, dire: {self.dire}, duration: {self.duration}, winner: {self.winner}"
+
+
 def team_list():
     teams = []
     r = requests.get("https://opendota.com/api/teams")
@@ -38,9 +50,36 @@ def team_list():
     teams.sort(key=lambda team: team.name.lower())
     return teams
 
-tl = team_list()
-for team in tl:
-    print(team)
+
+def get_duration(seconds):
+    minutes = seconds // 60
+    sec = seconds - minutes * 60
+    dur = f"{minutes}:{sec}"
+    return dur
+
+
+def recent_matches(number=5):
+    matches = []
+    r = requests.get("https://opendota.com/api/promatches")
+    js_matches = r.json()
+    for i in range(number):
+        match = js_matches[i]
+        name = match["league_name"]
+        radiant = match["radiant_name"]
+        dire = match["dire_name"]
+        if match["duration"]:
+            duration = get_duration(int(match["duration"]))
+            winner = radiant if match["radiant_win"] else dire
+        if dire and radiant:
+            match = Match(name, radiant, dire, duration, winner)
+            matches.append(match)
+
+    return matches
+
+
+m = recent_matches()
+for match in m:
+    print(match)
 
 
 
