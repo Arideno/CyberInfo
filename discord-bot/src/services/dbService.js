@@ -54,3 +54,31 @@ export const getSubscribedUsernamesByTeamname = (teamname) => {
   // console.log('userIds: ', userIds, 'value: ', value)
   return userIds
 }
+
+export const getUserHistory = (userId) => {
+  let value = db.get('user_messages_history')
+                  .find({ userId: userId })
+                  .value() || {}
+  let history = value.history || []
+  return history
+}
+
+export const addToUserHistory = (userId, matchId) => {
+  let value = db.get('user_messages_history')
+                .find({ userId: userId })
+                .value()
+  if (value) {
+    console.log('has in history')
+    value.history.push(matchId)
+    db.get('user_messages_history')
+      .filter({ userId: userId })
+      .assign({ ...value })
+      .write()
+  } else {
+    db.get('user_messages_history')
+      .push({ 
+        userId, history: [matchId]
+      })
+      .write()
+  }
+}

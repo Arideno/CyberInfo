@@ -26,7 +26,7 @@ client.on('ready', () => {
 });
 
 // Fetch /proMatches api every NOTIFICATION_TIMEOUT_IN_MILISECONDS miliseconds
-client.setInterval(async () => {await notificate()}, NOTIFICATION_TIMEOUT_IN_MILISECONDS)
+client.setInterval(async () => await notificate(client), NOTIFICATION_TIMEOUT_IN_MILISECONDS)
 
 // Commands handlers
 client.on('message', async msg => {
