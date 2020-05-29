@@ -10,6 +10,8 @@ export const getHelpHandler = async (message) => {
     data.push ('!subscribe {team_name}   ---   subscribe to matches of team_name')
     data.push ('--Example: !subscribe Natus Vincere')
 
+    data.push ('!subscribe_for_all   ---   subscribe to matches of all teams')
+
     data.push ('!unsubscribe {team_name}   ---   unsubscribe of matches of team_name')
     data.push ('--Example: !unsubscribe Natus Vincere')
 

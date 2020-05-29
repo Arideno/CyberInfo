@@ -4,6 +4,8 @@ import {
   getSubscribedUsernamesByTeamname,
   unsubscribeFromTeam
 } from '../services/dbService'
+import { getAllTeams } from '../services/apiService'
+import { getOnlyActiveTeams } from './getTeamsHandler' 
 
 const getReadableInfo = (usernames = []) => {
   let data = ['']
@@ -15,7 +17,7 @@ const getReadableInfo = (usernames = []) => {
 
 export const subscribeForTeamHandler = (message) => {
   try {
-    let { id: usernameId, author: username } = message
+    let { id: usernameId, username } = message.author
     let args = message.content.split(/ +/).slice(1)
     let teamname = args.join('')
 
@@ -29,9 +31,28 @@ export const subscribeForTeamHandler = (message) => {
   }
 }
 
+export const subscribeForAllTeamsHandler = async (message) => {
+  try {
+    let { id: usernameId, username } = message.author
+    let args = message.content.split(/ +/).slice(1)
+
+    let teams = await getAllTeams()
+    teams = getOnlyActiveTeams(teams)
+    teams.forEach(team => {
+      subscribeForTeam(usernameId, team.name)
+    })
+
+    let infoMessage = `Successfully subscribed ${username} on all teams`
+
+    reply(null, message, infoMessage)
+  } catch (err) {
+    reply(err, message, null)
+  }
+}
+
 export const unsubscribeFromTeamHandler = (message) => {
   try {
-    let { id: usernameId, author: username } = message
+    let { id: usernameId, username } = message.author
     let args = message.content.split(/ +/).slice(1)
     let teamname = args.join('')
 

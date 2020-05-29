@@ -3,6 +3,7 @@ const axios = require('axios').default
 export const getAllMatches = async () => {
   try {
     const url = 'https://api.opendota.com/api/proMatches'
+    console.log(`API call for ${url} started`)
     let response = await axios({
       method: 'GET',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -22,6 +23,7 @@ export const getAllMatches = async () => {
 export const getAllTeams = async () => {
   try {
     const url = 'https://api.opendota.com/api/teams'
+    console.log(`API call for ${url} started`)
     let response = await axios({
       method: 'GET',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },

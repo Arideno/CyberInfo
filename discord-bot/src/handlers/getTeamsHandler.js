@@ -10,7 +10,7 @@ const getReadableInfo = (teams = []) => {
   return info
 }
 
-const getOnlyActiveTeams = (teams) => {
+export const getOnlyActiveTeams = (teams) => {
   let currentTimestamp = Date.now() / 1000
   let activeTeams = teams.filter(team => {
     let differenceInSeconds = currentTimestamp - team.last_match_time
