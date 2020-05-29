@@ -7,13 +7,7 @@ import {
 import { getAllTeams } from '../services/apiService'
 import { getOnlyActiveTeams } from './getTeamsHandler' 
 
-const getReadableInfo = (usernames = []) => {
-  let data = ['']
-  for (let username of usernames) {
-    data.push( `${username}` )
-  }
-  return data
-}
+import { convertUsernamesToEmbed } from '../toEmbedUtils'
 
 export const subscribeForTeamHandler = (message) => {
   try {
@@ -72,9 +66,7 @@ export const getAllSubscribtionsByTeamnameHandler = (message) => {
     let teamname = args.join('')
     let usernames = getSubscribedUsernamesByTeamname(teamname)
 
-    let infoMessage = getReadableInfo(usernames)
-
-    reply(null, message, infoMessage)
+    reply(null, message, convertUsernamesToEmbed(usernames))
   } catch (err) {
     reply(err, message, null)
   }

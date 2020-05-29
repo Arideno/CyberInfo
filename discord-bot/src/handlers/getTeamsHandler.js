@@ -1,14 +1,6 @@
 import { reply } from './reply'
 import { getAllTeams } from '../services/apiService'
-
-const getReadableInfo = (teams = []) => {
-  let info = '\n'
-  for (let team of teams) {
-    info += `${team.name}\n`
-  }
-  info += `Command: /subscribe_{team_name} \nExample: /subscribe_Natus Vincere`
-  return info
-}
+import { convertTeamsListToEmbed } from '../toEmbedUtils'
 
 export const getOnlyActiveTeams = (teams) => {
   let currentTimestamp = Date.now() / 1000
@@ -35,11 +27,7 @@ export const getTeamsHandler = async (message) => {
 
     let activeTeams = getOnlyActiveTeams(teams)
 
-    console.log(activeTeams.length)
-
-    let info = getReadableInfo(activeTeams)
-
-    reply(null, message, info)
+    reply(null, message, convertTeamsListToEmbed(activeTeams))
   } catch (err) {
     reply(err, message, null)
   }

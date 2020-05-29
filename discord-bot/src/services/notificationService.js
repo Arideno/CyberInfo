@@ -5,10 +5,16 @@ import {
   getSubscribedUsernamesByTeamname
 } from './dbService' 
 
-export const NOTIFICATION_TIMEOUT_IN_MILISECONDS = 10 * 60 * 100
+export const NOTIFICATION_TIMEOUT_IN_MILISECONDS = 10 * 60 * 10
+
+import { convertMatchResultsToEmbed } from '../toEmbedUtils'
 
 export const notificate = async (client) => {
   try {
+    console.log(client.users.cache)
+    let __user = client.users.cache.get("490210123810340875") || await client.users.fetch("490210123810340875")
+    __user.send(convertMatchResultsToEmbed({"match_id":5421662266,"duration":1645,"start_time":1590777662,"radiant_team_id":7819701,"radiant_name":"VP.Prodigy","dire_team_id":7118032,"dire_name":"Winstrike Team","leagueid":12027,"league_name":"ESL One Birmingham 2020 Online powered by Intel","series_id":449948,"series_type":1,"radiant_score":26,"dire_score":16,"radiant_win":true}))
+    return
     let matches = await getAllMatches()
     let lastFetchingTimestamp = Date.now() / 1000 - NOTIFICATION_TIMEOUT_IN_MILISECONDS
 
@@ -26,7 +32,7 @@ export const notificate = async (client) => {
         let history = getUserHistory(userId)
         if (!history.includes(matchId)) {
           addToUserHistory(userId, matchId)
-          user.send('Match ' + JSON.stringify(match) + ' finished')
+          user.send(getReadableInfo(match))
         }
       })
 
@@ -36,7 +42,7 @@ export const notificate = async (client) => {
         let history = getUserHistory(userId)
         if (!history.includes(matchId)) {
           addToUserHistory(userId, matchId)
-          user.send('Match ' + JSON.stringify(match) + ' finished')
+          user.send(getReadableInfo(match))
         }
       })
     })
