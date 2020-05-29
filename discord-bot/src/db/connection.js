@@ -8,7 +8,7 @@ const db = low(adapter)
  * DB contains map, which contains teams
  * map[username] - contains teams on which user subscribed
  */
-// db.defaults({ teams: {} })
-//   .write()
+db.defaults({ teams: [] })
+  .write()
 
 module.exports = db

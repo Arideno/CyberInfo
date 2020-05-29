@@ -1,7 +1,7 @@
 export const reply = (err, messageInstance, content) => {
   if (err) {
     if (err instanceof Error) {
-      console.error('Handled error: ', err.message)
+      console.error('Handled error: ', err.message, err.stack)
       messageInstance.reply(err.message)
     } else {
       console.error('Unhandled error: ', err)
