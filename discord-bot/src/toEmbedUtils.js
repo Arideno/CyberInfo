@@ -70,10 +70,18 @@ export const convertTeamsListToEmbed = (teams = []) => {
 }
 
 export const convertUsernamesToEmbed = (usernames = []) => {
+
+  let description = ''
+  if (usernames.length > 0) {
+    description = '`' + usernames.join('`     `') + '`'
+  } else {
+    description = '`No one following this team`'
+  }
+
   let embed = new Discord.MessageEmbed()
                 .setColor('#0099ff')
                 .setTitle('Usernames')
-                .setDescription('`' + usernames.join('`     `') + '`')
+                .setDescription(description)
   return embed
 }
 
@@ -82,23 +90,28 @@ export const convertRecentMatchesToEmbed = (matches = []) => {
                 .setColor('#0099ff')
                 .setTitle('Recent matches')
   for (let match of matches) {
-      embed.addFields(
-        { 
-          name: 'Tournament', 
-          value: match.league_name,
-          inline: true 
-        },
-        { 
-          name: 'Radiant', 
-          value: match.radiant_name + (match.radiant_win === true ? ' 🏆' : ''),
-          inline: true 
-        },
-        { 
-          name: 'Dire', 
-          value: match.dire_name + (match.radiant_win === false ? ' 🏆' : ''), 
-          inline: true 
-        },
-      )
+    if (!match.radiant_name || !match.dire_name)
+      continue
+
+    console.log(match.radiant_name, match.dire_name)
+
+    embed.addFields(
+      { 
+        name: 'Tournament', 
+        value: match.league_name,
+        inline: true 
+      },
+      { 
+        name: 'Radiant', 
+        value: match.radiant_name + (match.radiant_win === true ? ' 🏆' : ''),
+        inline: true 
+      },
+      { 
+        name: 'Dire', 
+        value: match.dire_name + (match.radiant_win === false ? ' 🏆' : ''), 
+        inline: true 
+      },
+    )
   }
   return embed
 }
@@ -212,38 +225,21 @@ export const convertHelpToEmbed = () => {
                       },
 
 
-                      { 
-                        name: '`!get_subs_by_teamname {team_name}`', 
-                        value: '`get list of subscribers of team_name`',
-                        inline: true
-                      },
-                      {
-                        name: '\u200b',
-                        value: '\u200b',
-                        inline: true
-                      },
-                      { 
-                        name: '`Example:`', 
-                        value: '`!get_subs_by_teamname Natus Vincere`',
-                        inline: true
-                      },
-
-
-                      { 
-                        name: '`!get_subs_by_teamname {team_name}`', 
-                        value: '`get list of subscribers of team_name`',
-                        inline: true
-                      },
-                      {
-                        name: '\u200b',
-                        value: '\u200b',
-                        inline: true
-                      },
-                      { 
-                        name: '`Example:`', 
-                        value: '`!get_subs_by_teamname Natus Vincere`',
-                        inline: true
-                      },
+                      // { 
+                      //   name: '`!get_subs_by_teamname {team_name}`', 
+                      //   value: '`get list of subscribers of team_name`',
+                      //   inline: true
+                      // },
+                      // {
+                      //   name: '\u200b',
+                      //   value: '\u200b',
+                      //   inline: true
+                      // },
+                      // { 
+                      //   name: '`Example:`', 
+                      //   value: '`!get_subs_by_teamname Natus Vincere`',
+                      //   inline: true
+                      // },
 
 
                       { 

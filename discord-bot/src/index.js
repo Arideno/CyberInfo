@@ -52,10 +52,10 @@ client.on('message', async msg => {
     return
   }
 
-  if (message.startsWith('!get_subs_by_teamname')) {
-    getAllSubscribtionsByTeamnameHandler(msg)
-    return
-  }
+  // if (message.startsWith('!get_subs_by_teamname')) {
+  //   getAllSubscribtionsByTeamnameHandler(msg)
+  //   return
+  // }
 
   if (message.startsWith('!help')) {
     getHelpHandler(msg)
