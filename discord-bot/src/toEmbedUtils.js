@@ -1,3 +1,5 @@
+import { value } from './db/connection'
+
 const Discord = require('discord.js')
 
 export const convertMatchResultsToEmbed = (match = {}, matchData = {}) => {
@@ -22,15 +24,15 @@ export const convertMatchResultsToEmbed = (match = {}, matchData = {}) => {
                     inline: true 
                   },
                   { 
-                    name: 'Dire', 
-                    value: match.dire_name + (match.radiant_win === false ? ' 🏆' : ''), 
+                    name: ' --  ', 
+                    value: '  --  ', 
                     inline: true 
                   },
                   { 
-                    name: 'KDA', 
-                    value: 'Kills / Deaths / Assists',
+                    name: 'Dire', 
+                    value: match.dire_name + (match.radiant_win === false ? ' 🏆' : ''), 
                     inline: true 
-                  },
+                  }
                 )
                 .setTimestamp()
   
@@ -39,11 +41,17 @@ export const convertMatchResultsToEmbed = (match = {}, matchData = {}) => {
     let direPlayer = direPlayers[i]
     embed.addFields(
       {
-        name: radiantPlayer.name,
+        name: `${radiantPlayer.name || radiantPlayer.personaname} (${radiantPlayer.total_gold})`,
         value: `${radiantPlayer.kills} / ${radiantPlayer.deaths} / ${radiantPlayer.assists}`,
+        inline: true
+      },
+      { 
+        name: ' --  ', 
+        value: '  --  ', 
+        inline: true 
       },
       {
-        name: direPlayer.name,
+        name: `${direPlayer.name || direPlayer.personaname} (${direPlayer.total_gold})`,
         value: `${direPlayer.kills} / ${direPlayer.deaths} / ${direPlayer.assists}`,
         inline: true
       }
@@ -87,25 +95,25 @@ export const convertRecentMatchesToEmbed = (matches = []) => {
   let embed = new Discord.MessageEmbed()
                 .setColor('#0099ff')
                 .setTitle('Recent matches')
-  matches.forEach(match => {
-    embed.addFields(
-      { 
-        name: 'Tournament', 
-        value: match.league_name,
-        inline: true 
-      },
-      { 
-        name: 'Radiant', 
-        value: match.radiant_name + (match.radiant_win === true ? ' 🏆' : ''),
-        inline: true 
-      },
-      { 
-        name: 'Dire', 
-        value: match.dire_name + (match.radiant_win === false ? ' 🏆' : ''), 
-        inline: true 
-      },
-    )
-  })
+  for (let match of matches) {
+      embed.addFields(
+        { 
+          name: 'Tournament', 
+          value: match.league_name,
+          inline: true 
+        },
+        { 
+          name: 'Radiant', 
+          value: match.radiant_name + (match.radiant_win === true ? ' 🏆' : ''),
+          inline: true 
+        },
+        { 
+          name: 'Dire', 
+          value: match.dire_name + (match.radiant_win === false ? ' 🏆' : ''), 
+          inline: true 
+        },
+      )
+  }
   return embed
 }
 
@@ -131,6 +139,11 @@ export const convertHelpToEmbed = () => {
                         value: '`subscribe to matches of team_name`',
                         inline: true
                       },
+                      {
+                        name: '\u200b',
+                        value: '\u200b',
+                        inline: true
+                      },
                       { 
                         name: '`Example:`', 
                         value: '`!subscribe Natus Vincere`',
@@ -139,10 +152,16 @@ export const convertHelpToEmbed = () => {
                       { 
                         name: '`!subscribe_for_all`', 
                         value: '`subscribe to matches of all teams`',
+                        inline: false
                       },
                       { 
                         name: '`!unsubscribe {team_name}`', 
                         value: '`unsubscribe of matches of team_nam`',
+                        inline: true
+                      },
+                      {
+                        name: '\u200b',
+                        value: '\u200b',
                         inline: true
                       },
                       { 
@@ -153,6 +172,11 @@ export const convertHelpToEmbed = () => {
                       { 
                         name: '`!get_subs_by_teamname {team_name}`', 
                         value: '`get list of subscribers of team_name`',
+                        inline: true
+                      },
+                      {
+                        name: '\u200b',
+                        value: '\u200b',
                         inline: true
                       },
                       { 

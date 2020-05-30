@@ -10,7 +10,7 @@ import {
   updateTimestamp
 } from './dbService' 
 
-export const NOTIFICATION_TIMEOUT_IN_MILISECONDS = 10 * 60 * 1000
+export const NOTIFICATION_TIMEOUT_IN_MILISECONDS = 10 * 60 * 100
 
 import { convertMatchResultsToEmbed } from '../toEmbedUtils'
 
@@ -22,7 +22,7 @@ export const notificate = async (client) => {
     let currentTimestamp = Date.now() / 1000
 
     matches = matches.filter(match => match.start_time > lastNotificationTimestamp) || []
-    matches = matches.slice(0, 30)
+    matches = matches.slice(0, 50)
 
     let fetchingApiCalls = []
 

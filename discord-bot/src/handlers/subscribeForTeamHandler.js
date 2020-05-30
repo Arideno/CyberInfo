@@ -33,7 +33,8 @@ export const subscribeForAllTeamsHandler = async (message) => {
     let teams = await getAllTeams()
     teams = getOnlyActiveTeams(teams)
     teams.forEach(team => {
-      subscribeForTeam(usernameId, team.name)
+      let teamname = team.name.split(/ +/).join('')
+      subscribeForTeam(usernameId, teamname)
     })
 
     let infoMessage = `Successfully subscribed ${username} on all teams`

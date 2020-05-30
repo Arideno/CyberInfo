@@ -7,7 +7,8 @@ export const getMatchesHandler = async (message) => {
   try {
     let matches = await getAllMatches()
 
-    matches = matches.slice(0, 3)
+    matches = matches.slice(0, 10)
+    matches = matches.filter(match => match.radiant_name && match.dire_name)
 
     reply(null, message, convertRecentMatchesToEmbed(matches))
   } catch (err) {
