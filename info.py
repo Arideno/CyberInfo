@@ -107,13 +107,16 @@ def team_matches(name, number=5):
 def id_by_name(name):
     r = requests.get("https://opendota.com/api/teams")
     teams = r.json()
+    min = 5
+    ret = None
     for t in teams:
-        if len(name) < 4:
-            if t["name"].lower() == name.lower():
-                return t["team_id"], t["name"]
-        elif levenshtein_distance(name.lower(), t["name"].lower()) < 4:
+        levenshtein = levenshtein_distance(name.lower(), t["name"].lower())
+        if t["name"].lower() == name.lower():
             return t["team_id"], t["name"]
-    return None
+        elif levenshtein < min:
+            min = levenshtein
+            ret = t["team_id"], t["name"]
+    return ret
 
 
 def levenshtein_distance(word1, word2):
