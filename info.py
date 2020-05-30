@@ -14,15 +14,16 @@ class Team:
 
 
 class Match:
-    def __init__(self, name, radiant, dire, duration, winner):
+    def __init__(self, name, radiant, dire, duration, start, winner):
         self.name = name
         self.radiant = radiant
         self.dire = dire
         self.duration = duration
+        self.start = start
         self.winner = winner
 
     def __repr__(self):
-        return f"Name: {self.name}, radiant: {self.radiant}, dire: {self.dire}, duration: {self.duration}, winner: {self.winner}"
+        return f"Name: {self.name}, radiant: {self.radiant}, dire: {self.dire}, duration: {self.duration}, start: {self.start} winner: {self.winner}"
 
 
 def team_list():
@@ -54,7 +55,7 @@ def team_list():
 def get_duration(seconds):
     minutes = seconds // 60
     sec = seconds - minutes * 60
-    dur = f"{minutes}:{sec}"
+    dur = "{:02d}:{:02d}".format(minutes, sec)
     return dur
 
 
@@ -68,15 +69,16 @@ def recent_matches(number=5):
         radiant = match["radiant_name"]
         dire = match["dire_name"]
         if match["duration"]:
+            start = match["start_time"]
             duration = get_duration(int(match["duration"]))
             winner = radiant if match["radiant_win"] else dire
             if dire and radiant:
-                match = Match(name, radiant, dire, duration, winner)
+                match = Match(name, radiant, dire, duration, start, winner)
                 matches.append(match)
     return matches
 
 def team_matches(name, number=5):
-    identifier = id_by_name(name)
+    identifier = id_by_name(name)[0]
     if identifier is None:
         return None
     matches = []
@@ -94,9 +96,10 @@ def team_matches(name, number=5):
             radiant = match["opposing_team_name"]
             dire = tname
         if match["duration"]:
+            start = match["start_time"]
             duration = get_duration(int(match["duration"]))
             winner = radiant if match["radiant_win"] else dire
-            match = Match(mname, radiant, dire, duration, winner)
+            match = Match(mname, radiant, dire, duration, start, winner)
             matches.append(match)
     return matches
 
@@ -106,7 +109,7 @@ def id_by_name(name):
     teams = r.json()
     for t in teams:
         if levenshtein_distance(name.lower(), t["name"].lower()) < 4:
-            return t["team_id"]
+            return t["team_id"], t["name"]
     return None
 
 
@@ -127,5 +130,32 @@ def levenshtein_distance(word1, word2):
     return matrix[m - 1][n - 1]
 
 
+def team_matches_by_id(identifier, number=5):
+    matches = []
+    r = requests.get(f"https://opendota.com/api/teams/{identifier}")
+    tname = r.json()["name"]
+    r2 = requests.get(f"https://opendota.com/api/teams/{identifier}/matches")
+    js_r2 = r2.json()
+    for i in range(number):
+        match = js_r2[i]
+        mname = match["league_name"]
+        if match["radiant"]:
+            radiant = tname
+            dire = match["opposing_team_name"]
+        else:
+            radiant = match["opposing_team_name"]
+            dire = tname
+        if match["duration"]:
+            start = match["start_time"]
+            duration = get_duration(int(match["duration"]))
+            winner = radiant if match["radiant_win"] else dire
+            match = Match(mname, radiant, dire, duration, start, winner)
+            matches.append(match)
+    return matches
 
 
+
+
+matches = team_matches_by_id(36, 5)
+for match in matches:
+    print(match)
