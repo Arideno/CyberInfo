@@ -1,6 +1,16 @@
 const Discord = require('discord.js')
 
-export const convertMatchResultsToEmbed = (match = {}) => {
+export const convertMatchResultsToEmbed = (match = {}, matchData = {}) => {
+  let { players = [] } = matchData
+
+  let radiantPlayers = players.filter(player => {
+    return player.isRadiant
+  })
+  radiantPlayers.sort((player1, player2) => player1.lane_role - player2.lane_role)
+  let direPlayers = players.filter(player => {
+    return !player.isRadiant
+  })
+
   let embed = new Discord.MessageEmbed()
                 .setColor('#0099ff')
                 .setTitle('Match finished')
@@ -16,8 +26,30 @@ export const convertMatchResultsToEmbed = (match = {}) => {
                     value: match.dire_name + (match.radiant_win === false ? ' 🏆' : ''), 
                     inline: true 
                   },
+                  { 
+                    name: 'KDA', 
+                    value: 'Kills / Deaths / Assists',
+                    inline: true 
+                  },
                 )
                 .setTimestamp()
+  
+  for (let i = 0; i < 5; i++) {
+    let radiantPlayer = radiantPlayers[i]
+    let direPlayer = direPlayers[i]
+    embed.addFields(
+      {
+        name: radiantPlayer.name,
+        value: `${radiantPlayer.kills} / ${radiantPlayer.deaths} / ${radiantPlayer.assists}`,
+      },
+      {
+        name: direPlayer.name,
+        value: `${direPlayer.kills} / ${direPlayer.deaths} / ${direPlayer.assists}`,
+        inline: true
+      }
+    )
+  }
+
   return embed
 }
 
@@ -130,47 +162,4 @@ export const convertHelpToEmbed = () => {
                       },
                     )
   return embed
-  // let data = ['']
-  //   data.push ('!help   ---   get help')
-  //   data.push ('!get_last_matches   ---   get last Dota2 PRO matches')
-  //   data.push ('!get_all_teams   ---   get active Dota2 PRO teams')
-
-  //   data.push ('!subscribe {team_name}   ---   subscribe to matches of team_name')
-  //   data.push ('--Example: !subscribe Natus Vincere')
-
-  //   data.push ('!subscribe_for_all   ---   subscribe to matches of all teams')
-
-  //   data.push ('!unsubscribe {team_name}   ---   unsubscribe of matches of team_name')
-  //   data.push ('--Example: !unsubscribe Natus Vincere')
-
-  //   data.push ('!get_subs_by_teamname {team_name}   ---   get list of subscribers of team_name')
-  //   data.push ('--Example: !get_subs_by_teamname Natus Vincere')
 }
-
-// const getReadableInfo = (matches = []) => {
-//   let data = ['']
-//   for (let match of matches) {
-//     data.push( `Tournament: ${match.league_name}` )
-//     data.push( `Radiant: ${match.radiant_name} (${match.radiant_score}) ` + (match.radiant_win === true ? 'win' : '') )
-//     data.push( `Dire: ${match.dire_name} (${match.dire_score}) ` + (match.radiant_win === false ? 'win' : '') )
-//     data.push('')
-//   }
-//   return data
-// }
-
-// const getReadableInfo = (usernames = []) => {
-//   let data = ['']
-//   for (let username of usernames) {
-//     data.push( `${username}` )
-//   }
-//   return data
-// }
-
-// const getReadableInfo = (teams = []) => {
-//   let info = '\n'
-//   for (let team of teams) {
-//     info += `${team.name}\n`
-//   }
-//   info += `Command: /subscribe_{team_name} \nExample: /subscribe_Natus Vincere`
-//   return info
-// }

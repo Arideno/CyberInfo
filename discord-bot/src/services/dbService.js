@@ -64,21 +64,40 @@ export const getUserHistory = (userId) => {
 }
 
 export const addToUserHistory = (userId, matchId) => {
-  let value = db.get('user_messages_history')
-                .find({ userId: userId })
-                .value()
-  if (value) {
-    console.log('has in history')
-    value.history.push(matchId)
-    db.get('user_messages_history')
-      .filter({ userId: userId })
-      .assign({ ...value })
-      .write()
-  } else {
-    db.get('user_messages_history')
-      .push({ 
-        userId, history: [matchId]
-      })
-      .write()
+  try {
+    let value = db.get('user_messages_history')
+                  .find({ userId: userId })
+                  .value()
+    if (value) {
+      console.log('has in history')
+      value.history.push(matchId)
+      db.get('user_messages_history')
+        .filter({ userId: userId })
+        .assign({ ...value })
+        .write()
+    } else {
+      db.get('user_messages_history')
+        .push({ 
+          userId, history: [matchId]
+        })
+        .write()
+    }
+  } catch (err) {
+    console.error(err)
   }
+}
+
+export const updateTimestamp = (newTimestamp) => {
+  try {
+    db.set('last_message_timestamp', newTimestamp)
+      .write()
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const getLastNotificationTimestamp = () => {
+  let timestamp = db.get('last_message_timestamp')
+                    .value()
+  return timestamp
 }

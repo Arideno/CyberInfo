@@ -1,8 +1,13 @@
-import { getAllMatches } from './apiService'
+import { 
+  getAllMatches,
+  getMatchDataById 
+} from './apiService'
 import { 
   getUserHistory,
   addToUserHistory,
-  getSubscribedUsernamesByTeamname
+  getSubscribedUsernamesByTeamname,
+  getLastNotificationTimestamp,
+  updateTimestamp
 } from './dbService' 
 
 export const NOTIFICATION_TIMEOUT_IN_MILISECONDS = 10 * 60 * 1000
@@ -11,17 +16,35 @@ import { convertMatchResultsToEmbed } from '../toEmbedUtils'
 
 export const notificate = async (client) => {
   try {
-    // console.log(client.users.cache)
-    // let __user = client.users.cache.get("490210123810340875") || await client.users.fetch("490210123810340875")
-    // __user.send(convertMatchResultsToEmbed({"match_id":5421662266,"duration":1645,"start_time":1590777662,"radiant_team_id":7819701,"radiant_name":"VP.Prodigy","dire_team_id":7118032,"dire_name":"Winstrike Team","leagueid":12027,"league_name":"ESL One Birmingham 2020 Online powered by Intel","series_id":449948,"series_type":1,"radiant_score":26,"dire_score":16,"radiant_win":true}))
-    // return
     let matches = await getAllMatches()
-    let lastFetchingTimestamp = Date.now() / 1000 - NOTIFICATION_TIMEOUT_IN_MILISECONDS
+    let lastNotificationTimestamp = getLastNotificationTimestamp()
+    // lastNotificationTimestamp = 0 //TODO: REMOVE
+    let currentTimestamp = Date.now() / 1000
 
-    // console.log(matches, matches[0].start_time - lastFetchingTimestamp)
-    matches = matches.filter(match => match.start_time > lastFetchingTimestamp)
+    matches = matches.filter(match => match.start_time > lastNotificationTimestamp) || []
+    matches = matches.slice(0, 30)
+
+    let fetchingApiCalls = []
+
+    for (let match of matches) {
+      fetchingApiCalls.push(getMatchDataById(match.match_id))
+    }
+
+    let results = await Promise.all(fetchingApiCalls)
+
+    for (let result of results) {
+      let { match_id } = result
+      let match = matches.find(match => match.match_id === match_id)
+      match.match_data = result
+      // let matchData = await getMatchDataById(match.match_id)
+      // match.match_data = matchData
+    }
     
-    matches.forEach(match => {
+    for (let match of matches) {
+      // console.log('match info:', match.radiant_name, match.dire_name, match.match_data)
+      if (!match.radiant_name || !match.dire_name)
+        continue
+
       let radiantName = match.radiant_name.replace(/\s/g, '')
       let direName = match.dire_name.replace(/\s/g, '')
       let matchId = match.match_id
@@ -31,8 +54,9 @@ export const notificate = async (client) => {
         let user = client.users.cache.get(userId) || await client.users.fetch(userId)
         let history = getUserHistory(userId)
         if (!history.includes(matchId)) {
+          console.log('Must be sended')
+          user.send(convertMatchResultsToEmbed(match, match.match_data))
           addToUserHistory(userId, matchId)
-          user.send(getReadableInfo(match))
         }
       })
 
@@ -41,13 +65,17 @@ export const notificate = async (client) => {
         let user = client.users.cache.get(userId) || await client.users.fetch(userId)
         let history = getUserHistory(userId)
         if (!history.includes(matchId)) {
+          console.log('Must be sended2')
+          user.send(convertMatchResultsToEmbed(match, match.match_data))
           addToUserHistory(userId, matchId)
-          user.send(getReadableInfo(match))
         }
       })
-    })
+    }
+
+    updateTimestamp(currentTimestamp)
   } catch (err) {
     console.error(err)
+    throw err
   }
 }
 

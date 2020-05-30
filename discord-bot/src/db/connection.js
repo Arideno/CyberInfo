@@ -16,8 +16,9 @@ const db = low(adapter)
  *  userId - Integer, id of user
  *  history - Arrat<Integer>, id's of matches
  * }
+ * last_message_timestamp - Integer, unix-timestamp of last notifications
  */
-db.defaults({ teams: [], user_messages_history: [] })
+db.defaults({ teams: [], user_messages_history: [], last_message_timestamp: 0 })
   .write()
 
 module.exports = db
