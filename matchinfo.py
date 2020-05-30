@@ -27,6 +27,8 @@ class IndMatch:
         players = match_js["players"]
         for player in players:
             name = player["name"]
+            if name is None:
+                name = player["personaname"]
             mplayer = MPlayer(name)
             mplayer.kills = player["kills"]
             mplayer.deaths = player["deaths"]
