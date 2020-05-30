@@ -43,5 +43,5 @@ def get_player(name):
     player.fill_player_info()
     return player
 
-# player = get_player("s4")
-# print(player)
+player = get_player("9pasha")
+print(player)

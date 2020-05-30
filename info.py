@@ -16,6 +16,7 @@ class Team:
 class Match:
     def __init__(self, name, radiant, dire, duration, start, winner):
         self.name = name
+        self.id = None
         self.radiant = radiant
         self.dire = dire
         self.duration = duration
@@ -65,6 +66,7 @@ def recent_matches(number=5):
     js_matches = r.json()
     for i in range(number):
         match = js_matches[i]
+        identifier = match["match_id"]
         name = match["league_name"]
         radiant = match["radiant_name"]
         dire = match["dire_name"]
@@ -74,6 +76,7 @@ def recent_matches(number=5):
             winner = radiant if match["radiant_win"] else dire
             if dire and radiant:
                 match = Match(name, radiant, dire, duration, start, winner)
+                match.id = identifier
                 matches.append(match)
     return matches
 
@@ -89,6 +92,7 @@ def team_matches(name, number=5):
     for i in range(number):
         match = js_r2[i]
         mname = match["league_name"]
+        identifier = match["match_id"]
         if match["radiant"]:
             radiant = tname
             dire = match["opposing_team_name"]
@@ -100,6 +104,7 @@ def team_matches(name, number=5):
             duration = get_duration(int(match["duration"]))
             winner = radiant if match["radiant_win"] else dire
             match = Match(mname, radiant, dire, duration, start, winner)
+            match.id = identifier
             matches.append(match)
     return matches
 

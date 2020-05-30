@@ -69,6 +69,7 @@ class IndTeam:
             pass
         self.index = get_win_index(self.wins, self.losses)
 
+
 def get_win_index(x, y):
     per = x + y
     try:
@@ -85,7 +86,7 @@ def team_about(name):
     return team
 
 
-team = team_about("Team Oracle")
+team = team_about("navi")
 print(team)
 
 
