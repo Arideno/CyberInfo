@@ -105,7 +105,7 @@ def team_about(name):
     return team
 
 
-team = team_about("navi")
+team = team_about("flytomoon")
 print(team)
 
 

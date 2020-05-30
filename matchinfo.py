@@ -1,5 +1,6 @@
 import requests
 from info import id_by_name
+from info import get_duration
 
 
 class IndMatch:
@@ -8,11 +9,14 @@ class IndMatch:
         self.id = identifier
         self.teams = []
         self.winner = None
+        self.duration = None
 
     def get_info(self):
         r = requests.get(f"https://opendota.com/api/matches/{self.id}")
         match_js = r.json()
         self.name = match_js["league"]["name"]
+        duration = match_js["duration"]
+        self.duration = get_duration(duration)
         radt = match_js["radiant_team"]
         dirt = match_js["dire_team"]
         t1n = radt["name"]
@@ -22,7 +26,7 @@ class IndMatch:
         self.teams = [team1, team2]
         players = match_js["players"]
         for player in players:
-            name = player["personaname"]
+            name = player["name"]
             mplayer = MPlayer(name)
             mplayer.kills = player["hero_kills"]
             mplayer.deaths = player["deaths"]
@@ -39,7 +43,7 @@ class IndMatch:
 
 
     def __repr__(self):
-        return f"{self.name}, {self.id}, {self.teams[0].players}, {self.teams[1].players}, {self.winner}"
+        return f"{self.name}, {self.id}, {self.teams[0].players}, {self.teams[1].players}, {self.winner}, {self.duration}"
 
 
 
@@ -75,8 +79,8 @@ def get_match(identifier):
 # r1 = requests.get(f"https://opendota.com/api/matches/5444146803")
 # print(r1.json())
 
-# match = get_match(5444146803)
-#
-# print(match)
+match = get_match(5444494373)
+
+print(match)
 
 
