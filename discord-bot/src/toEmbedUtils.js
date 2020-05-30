@@ -103,6 +103,14 @@ export const convertRecentMatchesToEmbed = (matches = []) => {
   return embed
 }
 
+const getWinner = (isRadiant, radiantWin) => {
+  if (isRadiant && radiantWin === true)
+    return true
+  if (!isRadiant && radiantWin === false)
+    return true
+  return false
+}
+
 export const convertTeamInfoToEmbed = (teamInfo) => {
 
   let { 
@@ -131,12 +139,12 @@ export const convertTeamInfoToEmbed = (teamInfo) => {
       },
       { 
         name: isRadiant ? 'Radiant' : 'Dire', 
-        value: teamname + (match.radiant_win === true ? ' 🏆' : ''),
+        value: teamname + (getWinner(isRadiant, match.radiant_win) ? ' 🏆' : ''),
         inline: true 
       },
       { 
         name: !isRadiant ? 'Radiant' : 'Dire', 
-        value: match.opposing_team_name + (match.radiant_win === false ? ' 🏆' : ''), 
+        value: match.opposing_team_name + (getWinner(!isRadiant, match.radiant_win) ? ' 🏆' : ''), 
         inline: true 
       },
     )
@@ -161,6 +169,8 @@ export const convertHelpToEmbed = () => {
                         name: '`!get_all_teams`', 
                         value: '`get active Dota2 PRO teams`',
                       },
+
+
                       { 
                         name: '`!subscribe {team_name}`', 
                         value: '`subscribe to matches of team_name`',
@@ -176,11 +186,15 @@ export const convertHelpToEmbed = () => {
                         value: '`!subscribe Natus Vincere`',
                         inline: true
                       },
+
+
                       { 
                         name: '`!subscribe_for_all`', 
                         value: '`subscribe to matches of all teams`',
                         inline: false
                       },
+
+
                       { 
                         name: '`!unsubscribe {team_name}`', 
                         value: '`unsubscribe of matches of team_nam`',
@@ -196,6 +210,8 @@ export const convertHelpToEmbed = () => {
                         value: '`!unsubscribe Natus Vincere`',
                         inline: true
                       },
+
+
                       { 
                         name: '`!get_subs_by_teamname {team_name}`', 
                         value: '`get list of subscribers of team_name`',
@@ -209,6 +225,40 @@ export const convertHelpToEmbed = () => {
                       { 
                         name: '`Example:`', 
                         value: '`!get_subs_by_teamname Natus Vincere`',
+                        inline: true
+                      },
+
+
+                      { 
+                        name: '`!get_subs_by_teamname {team_name}`', 
+                        value: '`get list of subscribers of team_name`',
+                        inline: true
+                      },
+                      {
+                        name: '\u200b',
+                        value: '\u200b',
+                        inline: true
+                      },
+                      { 
+                        name: '`Example:`', 
+                        value: '`!get_subs_by_teamname Natus Vincere`',
+                        inline: true
+                      },
+
+
+                      { 
+                        name: '`!get_team_info {team_name}`', 
+                        value: '`get short info of team_name`',
+                        inline: true
+                      },
+                      {
+                        name: '\u200b',
+                        value: '\u200b',
+                        inline: true
+                      },
+                      { 
+                        name: '`Example:`', 
+                        value: '`!get_team_info Natus Vincere`',
                         inline: true
                       },
                     )
