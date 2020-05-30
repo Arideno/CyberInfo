@@ -23,10 +23,11 @@ class IndTeam:
                f" {self.country}, {self.wins}, {self.losses}"
 
     def fill_team_info(self, name):
-        idname = id_by_name(name)
         if name == "navi":
             self.name = "Natus Vincere"
+            idname = id_by_name(self.name)
         else:
+            idname = id_by_name(name)
             self.name = idname[1]
         try:
             r1 = requests.get(f"https://opendota.com/api/teams/{idname[0]}")
@@ -104,7 +105,7 @@ def team_about(name):
     return team
 
 
-team = team_about("Nemiga")
+team = team_about("navi")
 print(team)
 
 
