@@ -28,7 +28,7 @@ class IndMatch:
         for player in players:
             name = player["name"]
             mplayer = MPlayer(name)
-            mplayer.kills = player["hero_kills"]
+            mplayer.kills = player["kills"]
             mplayer.deaths = player["deaths"]
             mplayer.assistance = player["assists"]
             if player["isRadiant"]:
