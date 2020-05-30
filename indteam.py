@@ -23,7 +23,7 @@ class IndTeam:
                f" {self.country}, {self.wins}, {self.losses}"
 
     def fill_team_info(self, name):
-        if name == "navi":
+        if name.lower() == "navi":
             self.name = "Natus Vincere"
             idname = id_by_name(self.name)
         else:
@@ -105,7 +105,7 @@ def team_about(name):
     return team
 
 
-team = team_about("flytomoon")
+team = team_about("Navi")
 print(team)
 
 

@@ -81,6 +81,8 @@ def recent_matches(number=5):
     return matches
 
 def team_matches(name, number=5):
+    if name.lower() == "navi":
+        name = "Natus Vincere"
     identifier = id_by_name(name)[0]
     if identifier is None:
         return None
