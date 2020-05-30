@@ -38,9 +38,10 @@ class Player:
             self.teams.append(t["name"])
 
 
+def get_player(name):
+    player = Player(name)
+    player.fill_player_info()
+    return player
 
-# det = dota_obj.get_player_info('kuroky', True)
-# print(det)
-player = Player("kuroky")
-player.fill_player_info()
-print(player)
+# player = get_player("s4")
+# print(player)
