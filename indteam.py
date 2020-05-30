@@ -4,33 +4,85 @@ from liquipediapy import dota
 
 dota_obj = dota("CyberInfo")
 
+
 class IndTeam:
     def __init__(self, name):
         self.name = name
         self.id = id_by_name(name)[0]
         self.players = []
         self.wins = 0
+        self.coach = None
+        self.captain = None
+        self.country = None
         self.losses = 0
         self.logo = None
+        self.index = None
 
     def __repr__(self):
-        return f"Name: {self.name}, participants: {self.players}, wins: {self.wins}, losses: {self.losses}"
-
+        return f"{self.name}, {self.coach}, {self.captain}, {self.players}," \
+               f" {self.country}, {self.wins}, {self.losses}"
 
     def fill_team_info(self, name):
-        r = requests.get(f"https://opendota.com/api/teams/{self.id}")
-        r2 = requests.get(f"https://opendota.com/api/teams/{self.id}/players")
-        info = r.json()
-        players = r2.json()
-        print(players)
-        for player in players:
-            if player["is_current_team_member"] and player["name"]:
-                self.players.append(player["name"])
-        print(self.players)
+        if name == "navi":
+            name = "Natus Vincere"
+        try:
+            r1 = requests.get(f"https://opendota.com/api/teams/{id_by_name(name)[0]}")
+        except:
+            return None
+        try:
+            r2 = dota_obj.get_team_info(name, False)
+        except:
+            return None
+        js_info = r1.json()
+        try:
+            self.wins = js_info["wins"]
+        except:
+            pass
+        try:
+            self.losses = js_info["losses"]
+        except:
+            pass
+        try:
+            self.coach = r2["info"]["coach"]
+        except:
+            pass
+        try:
+            self.captain = r2["info"]["team captain"]
+        except:
+            pass
+        try:
+            self.country = r2["info"]["location"]
+        except:
+            pass
+        try:
+            players = r2["team_roster"]
+            for player in players:
+                self.players.append(player["ID"])
+        except:
+            pass
+        try:
+            self.logo = js_info["logo_url"]
+        except:
+            pass
+        self.index = get_win_index(self.wins, self.losses)
+
+def get_win_index(x, y):
+    per = x + y
+    try:
+        per1 = 100 / per
+    except:
+        return 0
+    win = x * per1
+    return win
 
 
-team = IndTeam("natus vincere")
+
+
+
+team = IndTeam("virtus pro")
 team.fill_team_info(team.name)
+print(team)
+print(team.logo)
+print(team.index)
 
-team_details = dota_obj.get_team_info('Natus Vincere', False)
-print(team_details)
+
