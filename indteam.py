@@ -23,14 +23,17 @@ class IndTeam:
                f" {self.country}, {self.wins}, {self.losses}"
 
     def fill_team_info(self, name):
+        idname = id_by_name(name)
         if name == "navi":
-            name = "Natus Vincere"
+            self.name = "Natus Vincere"
+        else:
+            self.name = idname[1]
         try:
-            r1 = requests.get(f"https://opendota.com/api/teams/{id_by_name(name)[0]}")
+            r1 = requests.get(f"https://opendota.com/api/teams/{idname[0]}")
         except:
             return None
         try:
-            r2 = dota_obj.get_team_info(name, False)
+            r2 = dota_obj.get_team_info(self.name, False)
         except:
             return None
         js_info = r1.json()
@@ -82,5 +85,7 @@ def team_about(name):
     return team
 
 
+team = team_about("natus vincere")
+print(team)
 
 
