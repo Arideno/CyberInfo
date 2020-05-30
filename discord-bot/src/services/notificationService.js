@@ -10,7 +10,7 @@ import {
   updateTimestamp
 } from './dbService' 
 
-export const NOTIFICATION_TIMEOUT_IN_MILISECONDS = 10 * 60 * 30
+export const NOTIFICATION_TIMEOUT_IN_MILISECONDS = 10 * 60 * 100
 
 import { convertMatchResultsToEmbed } from '../toEmbedUtils'
 
@@ -21,7 +21,7 @@ export const notificate = async (client) => {
     // lastNotificationTimestamp = 0 //TODO: REMOVE
     let currentTimestamp = Date.now() / 1000
 
-    matches = matches.filter(match => match.start_time > lastNotificationTimestamp) || []
+    matches = matches.filter(match => (match.start_time + match.duration + 1) > lastNotificationTimestamp) || []
     matches = matches.slice(0, 50)
 
     let fetchingApiCalls = []
@@ -40,6 +40,7 @@ export const notificate = async (client) => {
       // match.match_data = matchData
     }
     
+    let isNotified = false
     for (let match of matches) {
       // console.log('match info:', match.radiant_name, match.dire_name, match.match_data)
       if (!match.radiant_name || !match.dire_name)
@@ -57,6 +58,7 @@ export const notificate = async (client) => {
           console.log('Must be sended')
           user.send(convertMatchResultsToEmbed(match, match.match_data))
           addToUserHistory(userId, matchId)
+          isNotified = true
         }
       })
 
@@ -68,11 +70,13 @@ export const notificate = async (client) => {
           console.log('Must be sended2')
           user.send(convertMatchResultsToEmbed(match, match.match_data))
           addToUserHistory(userId, matchId)
+          isNotified = true
         }
       })
     }
 
-    updateTimestamp(currentTimestamp)
+    if (isNotified)
+      updateTimestamp(currentTimestamp)
   } catch (err) {
     console.error(err)
     throw err
