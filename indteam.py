@@ -76,13 +76,11 @@ def get_win_index(x, y):
     return win
 
 
+def team_about(name):
+    team = IndTeam(name)
+    team.fill_team_info(name)
+    return team
 
 
-
-team = IndTeam("virtus pro")
-team.fill_team_info(team.name)
-print(team)
-print(team.logo)
-print(team.index)
 
 
