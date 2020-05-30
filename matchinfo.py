@@ -23,10 +23,14 @@ class IndMatch:
         players = match_js["players"]
         for player in players:
             name = player["personaname"]
+            mplayer = MPlayer(name)
+            mplayer.kills = player["hero_kills"]
+            mplayer.deaths = player["deaths"]
+            mplayer.assistance = player["assists"]
             if player["isRadiant"]:
-                self.teams[0].players.append(name)
+                self.teams[0].players.append(mplayer)
             else:
-                self.teams[1].players.append(name)
+                self.teams[1].players.append(mplayer)
         if match_js["radiant_win"]:
             self.winner = self.teams[0].name
         else:
@@ -44,9 +48,12 @@ class MPlayer:
     def __init__(self, name):
         self.name = name
         self.side = None
-        kills = 0
-        deaths = 0
-        assistance = 0
+        self.kills = 0
+        self.deaths = 0
+        self.assistance = 0
+
+    def __str__(self):
+        return f"name: {self.name},kills: {self.kills}, deaths: {self.deaths}, assistance: {self.assistance}"
 
 
 class MTeam:
@@ -55,12 +62,21 @@ class MTeam:
         self.players = []
 
 
+
+
+def get_match(identifier):
+    match = IndMatch(identifier)
+    match.get_info()
+    return match
+
+
 # match = IndMatch("hi")
 # match.get_info()
 # r1 = requests.get(f"https://opendota.com/api/matches/5444146803")
 # print(r1.json())
 
-match = IndMatch(5444146803)
-match.get_info()
-print(match)
+# match = get_match(5444146803)
+#
+# print(match)
+
 
