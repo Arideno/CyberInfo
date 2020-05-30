@@ -85,7 +85,7 @@ def team_about(name):
     return team
 
 
-team = team_about("OG")
+team = team_about("og")
 print(team)
 
 

@@ -27,10 +27,15 @@ class IndMatch:
                 self.teams[0].players.append(name)
             else:
                 self.teams[1].players.append(name)
+        if match_js["radiant_win"]:
+            self.winner = self.teams[0].name
+        else:
+            self.winner = self.teams[1].name
+
 
 
     def __repr__(self):
-        return f"{self.name}, {self.id}, {self.teams[0].players}, {self.teams[1].players} {self.winner}"
+        return f"{self.name}, {self.id}, {self.teams[0].players}, {self.teams[1].players}, {self.winner}"
 
 
 
