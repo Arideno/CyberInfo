@@ -1,4 +1,6 @@
-import { getAllMatches } from '../services/apiService'
+import { 
+  getAllMatches,
+} from '../services/apiService'
 import { reply } from './reply'
 
 import { convertRecentMatchesToEmbed } from '../toEmbedUtils'

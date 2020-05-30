@@ -20,6 +20,26 @@ export const getAllMatches = async () => {
   }
 }
 
+export const getMatchesByTeamId = async (teamId) => {
+  try {
+    const url = `https://api.opendota.com/api/teams/${teamId}/matches`
+    console.log(`API call for ${url} started`)
+    let response = await axios({
+      method: 'GET',
+      headers: { 'content-type': 'application/json' },
+      url,
+    })
+
+    let { data } = response
+
+    return data
+
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
+}
+
 export const getAllTeams = async () => {
   try {
     const url = 'https://api.opendota.com/api/teams'

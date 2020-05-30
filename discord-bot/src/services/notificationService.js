@@ -10,7 +10,7 @@ import {
   updateTimestamp
 } from './dbService' 
 
-export const NOTIFICATION_TIMEOUT_IN_MILISECONDS = 10 * 60 * 100
+export const NOTIFICATION_TIMEOUT_IN_MILISECONDS = 10 * 60 * 1000
 
 import { convertMatchResultsToEmbed } from '../toEmbedUtils'
 

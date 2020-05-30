@@ -6,6 +6,7 @@ const client = new Discord.Client()
 import { getMatchesHandler } from './handlers/getMatchesHandler'
 import { getHelpHandler } from './handlers/getHelpHandler'
 import { getTeamsHandler } from './handlers/getTeamsHandler'
+import { getTeamInfoByTeamname } from './handlers/teamInfoHandler'
 import { 
   subscribeForTeamHandler, 
   subscribeForAllTeamsHandler,
@@ -68,6 +69,11 @@ client.on('message', async msg => {
 
   if (message.startsWith('!get_last_matches')) {
     getMatchesHandler(msg)
+    return
+  }
+
+  if (message.startsWith('!get_team_info')) {
+    getTeamInfoByTeamname(msg)
     return
   }
 

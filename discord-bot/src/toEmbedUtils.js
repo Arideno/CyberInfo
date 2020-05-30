@@ -66,14 +66,6 @@ export const convertTeamsListToEmbed = (teams = []) => {
                 .setColor('#0099ff')
                 .setTitle('Teams')
                 .setDescription('`' + teams.map(team => team.name).join('`     `') + '`')
-  // embed.addFields({
-  //   name: 'Teams',
-  //   value: '`' + teams.map(team => team.name).join('`     `') + '`',
-  //   inline: true
-  // })
-  // teams.forEach(team => {
-    
-  // })
   return embed
 }
 
@@ -82,12 +74,6 @@ export const convertUsernamesToEmbed = (usernames = []) => {
                 .setColor('#0099ff')
                 .setTitle('Usernames')
                 .setDescription('`' + usernames.join('`     `') + '`')
-  // usernames.forEach(username => {
-  //   embed.addFields({
-  //     name: 'Usernames',
-  //     value: username
-  //   })
-  // })
   return embed
 }
 
@@ -113,6 +99,47 @@ export const convertRecentMatchesToEmbed = (matches = []) => {
           inline: true 
         },
       )
+  }
+  return embed
+}
+
+export const convertTeamInfoToEmbed = (teamInfo) => {
+
+  let { 
+    name: teamname, 
+    matches,
+    logo_url,
+    wins,
+    losses
+  } = teamInfo
+
+  let embed = new Discord.MessageEmbed()
+                .setColor('#0099ff')
+                .setTitle('Recent matches')
+                .setThumbnail(logo_url)
+                .setDescription(
+                  `wins: ${wins}
+                   losses: ${losses}`
+                )
+  for (let match of matches) {
+    let { radiant: isRadiant } = match
+    embed.addFields(
+      { 
+        name: 'Tournament', 
+        value: match.league_name,
+        inline: true 
+      },
+      { 
+        name: isRadiant ? 'Radiant' : 'Dire', 
+        value: teamname + (match.radiant_win === true ? ' 🏆' : ''),
+        inline: true 
+      },
+      { 
+        name: !isRadiant ? 'Radiant' : 'Dire', 
+        value: match.opposing_team_name + (match.radiant_win === false ? ' 🏆' : ''), 
+        inline: true 
+      },
+    )
   }
   return embed
 }
