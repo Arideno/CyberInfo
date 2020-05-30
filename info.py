@@ -108,7 +108,10 @@ def id_by_name(name):
     r = requests.get("https://opendota.com/api/teams")
     teams = r.json()
     for t in teams:
-        if levenshtein_distance(name.lower(), t["name"].lower()) < 4:
+        if len(name) < 4:
+            if t["name"].lower() == name.lower():
+                return t["team_id"], t["name"]
+        elif levenshtein_distance(name.lower(), t["name"].lower()) < 4:
             return t["team_id"], t["name"]
     return None
 
